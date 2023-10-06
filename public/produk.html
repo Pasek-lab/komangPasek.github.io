@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produk</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-gray-800 text-gray-500">
+    <header class="z-10 sticky top-0 bg-gray-950 py-5">
+      <!-- header -->
+      <nav class="w-9/12 flex flex-row mx-auto">
+        <div class="uppercase text-lg basis-1/4">
+          <!-- logo -->
+          <a href="index.html">
+            <span class="font-extrabold text-white">Pasek</span>
+            <span class="font-extralight text-blue-400">Bayu</span>
+          </a>
+        </div>
+        <div class="basis-1/2 flex items-center justify-evenly">
+          <!-- Link -->
+          <a href="index.html#project"><span>project</span></a>
+          <a href="#produk"><span>product</span></a>
+          <a href="index.html#contact"><span>contact</span></a>
+        </div>
+        <div class="basis-1/4 flex justify-end">
+          <!-- dark mode dan keranjang -->
+          <label for="darkModeToggle" class="cursor-pointer">
+            <span class="sr-only">Toggle Dark Mode</span>
+            <input type="checkbox" id="darkModeToggle" class="hidden" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              class="w-6 h-6 text-yellow-400 dark:text-yellow-300"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 1v2m0 18v2m-8-9h2m18 0h2M4 12h2"
+              />
+            </svg>
+          </label>
+          <!-- Icon keranjang -->
+          <img
+            src="cart.png"
+            alt="Keranjang Belanja"
+            class="w-6 h-6 ml-4 cursor-pointer"
+          />
+        </div>
+      </nav>
+    </header>
+
+    <div id="app">
+      <main id="hero" class="relative -top-20">
+        <!-- Main Conten -->
+        <div id="produk" class="bg-gray-800 py-40">
+          <div class="w-9/12 mx-auto">
+            <div class="flex flex-col">
+              <div class="flex items-center">
+                <svg class="stroke-gray-400 stroke-2 h-5 w-5">
+                  <line x1="0" y1="10px" x2="10px" y2="10px" />
+                </svg>
+                <h2 class="uppercase text-xs font-extralight tracking-lebar">
+                  {{ message }}
+                </h2>
+              </div>
+              <h3 class="text-3xl text-white">Nama Produk</h3>
+              <br />
+            </div>
+
+            <div
+              class="flex flex-wrap -mx-4 text-center gap-20 py-10 shadow-lg"
+            >
+              <!-- Menggunakan flex-wrap untuk tampilan horizontal -->
+              <!-- Menampilkan Produk -->
+              <div
+                v-for="produk in produkList"
+                :key="produk.nama"
+                class="mb-4 mx-4 rounded-lg bg-white p-4 shadow-md"
+                style="max-width: 300px"
+              >
+                <h4 class="text-xl text-gray-800">{{ produk.nama }}</h4>
+                <img
+                  :src="produk.gambar"
+                  alt="Gambar {{ produk.nama }}"
+                  class="w-200 h-200"
+                />
+                <p class="text-gray-600">Harga: ${{ produk.harga }}</p>
+                <p class="text-gray-600">{{ produk.deskripsi }}</p>
+                <button
+                  @click="addToCart(produk)"
+                  class="bg-blue-500 text-white px-4 py-2 rounded-md mt-2"
+                >
+                  Beli
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          id="cart"
+          class="mb-4 mx-auto rounded-lg bg-white p-4"
+          style="max-width: 300px"
+        >
+          <div class="text-center">
+            <h3 class="text-xl font-semibold">Keranjang Belanja</h3>
+            <ul id="cart-items" class="mt-2">
+              <li v-for="item in cart" :key="item.product.nama">
+                {{ item.product.nama }} - Harga: ${{ item.product.harga }} -
+                Jumlah: {{ item.qty }}
+              </li>
+            </ul>
+            <p class="mt-2">Total Produk: <span>{{ totalProducts }}</span></p>
+            <p class="mt-2">
+              Total Pembelian:
+              <span class="text-2xl font-bold">${{ totalPembelian }}</span>
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      createApp({
+        data() {
+          return {
+            message: "Produk",
+            produkList: [
+              {
+                nama: "Aqua",
+                harga: 3000,
+                deskripsi:
+                  "Air mineral yang sangat khas dengan rasa segar dan dikonsumsi oleh banyak orang",
+                gambar: "aqua1.png", // Ganti dengan URL gambar Aqua Anda
+              },
+              {
+                nama: "Sprite",
+                harga: 4000,
+                deskripsi:
+                  "Sprite adalah minuman ringan berkarbonasi transparan rasa lemon",
+                gambar: "Sprite1.jpg", // Ganti dengan URL gambar Sprite Anda
+              },
+              {
+                nama: "Pocari",
+                harga: 5000,
+                deskripsi:
+                  "Pocari Sweat adalah minuman berionPocari Sweat berenergi",
+                gambar: "pocari2.jpg", // Ganti dengan URL gambar Pocari Anda
+              },
+              // Tambahkan produk lainnya sesuai kebutuhan
+            ],
+            cart: [],
+          };
+        },
+        computed: {
+          totalProducts() {
+            return this.cart.reduce((total, item) => total + item.qty, 0);
+          },
+          totalPembelian() {
+            return this.cart.reduce(
+              (total, item) => total + item.product.harga * item.qty,
+              0
+            );
+          },
+        },
+        methods: {
+          addToCart(product) {
+            const item = this.cart.find(
+              (item) => item.product.nama === product.nama
+            );
+            if (item) {
+              item.qty++;
+            } else {
+              this.cart.push({ product, qty: 1 });
+            }
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
